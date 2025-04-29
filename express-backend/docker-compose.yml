@@ -1,0 +1,26 @@
+# @format
+
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    ports:
+      # external port : internal port
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - data_pg:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - postgres
+
+volumes:
+  data_pg:
+
+networks:
+  postgres:
+    driver: bridge
