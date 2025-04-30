@@ -1,7 +1,7 @@
 [
   {
     "id": "tst",
-    "name": "fractional reserve",
+    "title": "fractional reserve",
     "description": "test description",
     "questions": [
       {
@@ -11,7 +11,7 @@
   },
   {
     "id": "tstasdf123",
-    "name": "fractional testst 2",
+    "title": "fractional testst 2",
     "description": "test description",
     "questions": [
       {
@@ -21,7 +21,7 @@
   },
   {
     "id": "tsta444sdf",
-    "name": "fractional testst 4",
+    "title": "fractional testst 4",
     "description": "test description",
     "questions": [
       {
@@ -31,7 +31,7 @@
   },
   {
     "id": "t1234stasdf",
-    "name": "fractional testst 6",
+    "title": "fractional testst 6",
     "description": "test description",
     "questions": [
       {

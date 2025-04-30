@@ -114,7 +114,7 @@ export default function QuizzesHome() {
             <Grid key={quiz.id} size={4}>
               <Card>
                 <CardContent>
-                  <Typography variant="h4">{quiz.name}</Typography>
+                  <Typography variant="h4">{quiz.title}</Typography>
                   <Typography variant="body1">{quiz.description}</Typography>
                 </CardContent>
                 <CardActions
