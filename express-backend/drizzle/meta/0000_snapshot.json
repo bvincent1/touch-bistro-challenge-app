@@ -1,5 +1,5 @@
 {
-  "id": "ed31b247-69a4-4309-8ffa-a9216ed2f803",
+  "id": "8408bdd2-a881-40c9-ae4c-780a64df4984",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -40,8 +40,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "test_id": {
-          "name": "test_id",
+        "quiz_id": {
+          "name": "quiz_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -49,12 +49,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "questions_test_id_quizzes_id_fk": {
-          "name": "questions_test_id_quizzes_id_fk",
+        "questions_quiz_id_quizzes_id_fk": {
+          "name": "questions_quiz_id_quizzes_id_fk",
           "tableFrom": "questions",
           "tableTo": "quizzes",
           "columnsFrom": [
-            "test_id"
+            "quiz_id"
           ],
           "columnsTo": [
             "id"
@@ -91,19 +91,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {},

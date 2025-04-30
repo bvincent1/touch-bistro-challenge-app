@@ -5,14 +5,14 @@
     "title": "Find the line of best fit",
     "description": "Given the following coordinates find the line of best fit:\n+-----+\n|    |\n+-----+\n",
     "correct_answer": "y=2x-1",
-    "test_id": "253ddd40-09c8-48b0-8a06-1abb0d02a3ee"
+    "quiz_id": "253ddd40-09c8-48b0-8a06-1abb0d02a3ee"
   },
   {
     "id": "20d81b6f-73ce-4dff-baa0-8f5a5a959391",
-    "index": 2,
+    "index": 1,
     "title": "Find the line of best fit",
     "description": "Given the following coordinates find the line of best fit:\n+-----+\n|    |\n+-----+\n",
     "correct_answer": "y=3x-1",
-    "test_id": "253ddd40-09c8-48b0-8a06-1abb0d02a3ee"
+    "quiz_id": "253ddd40-09c8-48b0-8a06-1abb0d02a3ee"
   }
 ]

@@ -8,7 +8,7 @@ export const questions = t.pgTable("questions", {
   title: t.varchar().notNull(),
   description: t.text().notNull(),
   correct_answer: t.text().notNull(),
-  test_id: t
+  quiz_id: t
     .uuid()
     .notNull()
     .references(() => quizzes.id),
