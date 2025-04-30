@@ -97,6 +97,7 @@ export default function TestsHome() {
                 name="name"
                 children={field => (
                   <TextField
+                    id={field.name}
                     label={
                       _.isEmpty(field.state.meta.errors)
                         ? 'Name'
@@ -117,6 +118,7 @@ export default function TestsHome() {
         </DialogContent>
         <DialogActions>
           <Button
+            id="button-login-form"
             type="button"
             variant="contained"
             onClick={() => form.handleSubmit()}
