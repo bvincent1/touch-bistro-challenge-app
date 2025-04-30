@@ -15,6 +15,24 @@ const theme = createTheme({
       main: red.A400,
     },
   },
+  components: {
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          marginTop: 15,
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          padding: '1em',
+          minHeight: '20em',
+          minWidth: '30em',
+        },
+      },
+    },
+  },
 })
 
 export default theme
