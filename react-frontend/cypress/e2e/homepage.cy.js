@@ -4,4 +4,14 @@ describe('homepage', () => {
     cy.get('#name').type('harold')
     cy.get('#button-login-form').click()
   })
+
+  it('should list out 5 quizzes', () => {
+    cy.fixture('getQuizzes').then(json => {
+      cy.intercept('GET', `${Cypress.config().apiUrl}/quizzes`, json)
+    })
+    cy.visit(Cypress.config().baseUrl)
+    cy.get('#name').type('harold')
+    cy.get('#button-login-form').click()
+    cy.get('.MuiPaper-root').should('have.length', 5)
+  })
 })

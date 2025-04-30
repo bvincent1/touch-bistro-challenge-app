@@ -11,58 +11,22 @@ import {
   Typography,
 } from '@mui/material'
 import { useForm } from '@tanstack/react-form'
-
-import { useUser } from '../hooks/use-user'
+import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 import _ from 'lodash'
 import { Link } from 'react-router'
 import { Card } from '@mui/material'
 
-const tests = [
-  {
-    id: 'tst',
-    name: 'fractional reserve',
-    description: 'test description',
-    questions: [
-      {
-        id: 'testtt',
-      },
-    ],
-  },
-  {
-    id: 'tstasdf',
-    name: 'fractional testst 2',
-    description: 'test description',
-    questions: [
-      {
-        id: 'testaatt',
-      },
-    ],
-  },
-  {
-    id: 'tstasdf',
-    name: 'fractional testst 4',
-    description: 'test description',
-    questions: [
-      {
-        id: 'testaatt',
-      },
-    ],
-  },
-  {
-    id: 'tstasdf',
-    name: 'fractional testst 6',
-    description: 'test description',
-    questions: [
-      {
-        id: 'testaatt',
-      },
-    ],
-  },
-]
+import { useUser } from '../hooks/use-user'
 
 export default function QuizzesHome() {
   const { user, setUser } = useUser()
+  // Queries
+  const query = useQuery({
+    queryKey: ['quizzes'],
+    queryFn: async () =>
+      (await fetch(`${import.meta.env.VITE_API_URL}/quizzes`)).json(),
+  })
   const form = useForm({
     defaultValues: {
       name: user,
@@ -78,6 +42,8 @@ export default function QuizzesHome() {
       setUser(value.name)
     },
   })
+
+  console.log({ user, query, form })
 
   if (!user) {
     return (
@@ -130,6 +96,10 @@ export default function QuizzesHome() {
     )
   }
 
+  if (query.isLoading) {
+    return <div>loading...</div>
+  }
+
   return (
     <div>
       <Grid
@@ -138,26 +108,29 @@ export default function QuizzesHome() {
         columns={{ xs: 4, sm: 8, md: 12 }}
         spacing={4}
       >
-        {_.map(tests, test => (
-          <Grid key={test.id} size={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h4">{test.name}</Typography>
-                <Typography variant="body1">{test.description}</Typography>
-              </CardContent>
-              <CardActions
-                sx={{
-                  justifyContent: 'center',
-                }}
-              >
-                <Link to={`/question/${test.questions[0].id}`}>
-                  <Button>Start Test</Button>
-                </Link>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-        {_.isEmpty(tests) && (
+        {_.map(query.data, quiz => {
+          console.log(quiz)
+          return (
+            <Grid key={quiz.id} size={4}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h4">{quiz.name}</Typography>
+                  <Typography variant="body1">{quiz.description}</Typography>
+                </CardContent>
+                <CardActions
+                  sx={{
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Link to={`/question/${quiz.questions[0].id}`}>
+                    <Button>Start Test</Button>
+                  </Link>
+                </CardActions>
+              </Card>
+            </Grid>
+          )
+        })}
+        {_.isEmpty(query.data) && (
           <Typography variant="h4">No tests available</Typography>
         )}
       </Grid>
