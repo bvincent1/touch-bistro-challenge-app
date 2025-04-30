@@ -1,5 +1,10 @@
 {
-  "exclude": ["drizzle.config.ts", "**/*.spec.ts", "vitest.config.ts"],
+  "exclude": [
+    "drizzle.config.ts",
+    "**/*.spec.ts",
+    "vitest.config.ts",
+    "seed.ts"
+  ],
   "compilerOptions": {
     "module": "NodeNext",
     "rootDir": "./src",

@@ -22,6 +22,7 @@ typecheck: ## typecheck the app
 migrate: ## run db migrations
 	@yarn drizzle-kit generate
 	@yarn drizzle-kit migrate
+	@yarn drizzle-kit push
 .PHONY: migrate
 
 tests: ## run tests in watcher mode
@@ -32,3 +33,14 @@ tests: ## run tests in watcher mode
 services: ## run the supporting docker containers
 	@docker compose -f ./docker-compose.yml --env-file .env up
 .PHONY: services
+
+
+seed: migrate ## seed the db with fixture values
+	@yarn ts-node ./scripts/seed.ts
+.PHONY: seed
+
+
+DB_CONNECTION="postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)"
+reset: ## Reset connected db
+	@echo "drop schema public cascade; create schema public;" | psql $(DB_CONNECTION)
+.PHONY: reset
