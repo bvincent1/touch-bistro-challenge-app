@@ -123,7 +123,7 @@ export default function QuizzesHome() {
                   }}
                 >
                   <Link to={`/question/${quiz.questions[0].id}`}>
-                    <Button>Start Test</Button>
+                    <Button id={`quiz-start-${quiz.id}`}>Start Quiz</Button>
                   </Link>
                 </CardActions>
               </Card>

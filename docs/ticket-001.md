@@ -6,9 +6,9 @@ As a student I want visit the site, authenticate, and see a list of quizzes I ca
 
 - [x] create initial modal asking for student's name
 - [x] create a list component for the available quizzes
-- [ ] mock data from api
-- [ ] add ui tests
-- [ ] each quiz should be card linking to the first question
+- [x] mock data from api
+- [x] add ui tests
+- [x] each quiz should have a card linking to the first question
 
 - [ ] create api endpoint for "/quizzes"
 - [ ] add quizzes / questions schemas

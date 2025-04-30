@@ -12,6 +12,8 @@ describe('homepage', () => {
     cy.visit(Cypress.config().baseUrl)
     cy.get('#name').type('harold')
     cy.get('#button-login-form').click()
-    cy.get('.MuiPaper-root').should('have.length', 5)
+    cy.fixture('getQuizzes').then(json => {
+      json.map(q => cy.get(`#quiz-start-${q.id}`).should('exist'))
+    })
   })
 })
