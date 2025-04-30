@@ -61,7 +61,7 @@ const tests = [
   },
 ]
 
-export default function TestsHome() {
+export default function QuizzesHome() {
   const { user, setUser } = useUser()
   const form = useForm({
     defaultValues: {

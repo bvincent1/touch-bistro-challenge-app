@@ -17,7 +17,7 @@ import '@fontsource/roboto/700.css'
 import './index.css'
 
 import theme from './theme.tsx'
-import TestsHome from './pages/TestsHome.tsx'
+import QuizzesHome from './pages/QuizzesHome.tsx'
 import { UserProvider } from './hooks/use-user.tsx'
 
 createRoot(document.getElementById('root')!).render(
@@ -36,7 +36,7 @@ createRoot(document.getElementById('root')!).render(
           <BrowserRouter>
             <Routes>
               <Route index element={<Navigate replace to="/home" />} />
-              <Route path="/home" element={<TestsHome />} />
+              <Route path="/home" element={<QuizzesHome />} />
             </Routes>
           </BrowserRouter>
         </Container>
