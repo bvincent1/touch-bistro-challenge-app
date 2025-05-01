@@ -23,9 +23,17 @@ export default function QuizzesHome() {
   const { user, setUser } = useUser()
   // Queries
   const query = useQuery({
+    enabled: !!user,
     queryKey: ['quizzes'],
     queryFn: async () =>
-      (await fetch(`${import.meta.env.VITE_API_URL}/quizzes`)).json(),
+      (
+        await fetch(`${import.meta.env.VITE_API_URL}/quizzes`, {
+          method: 'GET',
+          headers: {
+            'quiz-user': user,
+          },
+        })
+      ).json(),
   })
   const form = useForm({
     defaultValues: {
@@ -38,8 +46,9 @@ export default function QuizzesHome() {
           .min(2, 'Name needs to be at least 2 characters long'),
       }),
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: async ({ value, formApi }) => {
       setUser(value.name)
+      formApi.reset()
     },
   })
 
@@ -97,7 +106,31 @@ export default function QuizzesHome() {
   }
 
   if (query.isLoading) {
-    return <div>loading...</div>
+    return (
+      <Grid container justifyContent="center">
+        <Grid size={8}>
+          <Card>
+            <CardContent sx={{ textAlign: 'center' }}>
+              <Typography>loading...</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    )
+  }
+
+  if (!user || _.isEmpty(query.data)) {
+    return (
+      <Grid container justifyContent="center">
+        <Grid size={8}>
+          <Card>
+            <CardContent sx={{ textAlign: 'center' }}>
+              <Typography>Quizzes Unavailable</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    )
   }
 
   return (
@@ -108,28 +141,34 @@ export default function QuizzesHome() {
         columns={{ xs: 4, sm: 8, md: 12 }}
         spacing={4}
       >
-        {_.map(query.data, quiz => {
-          console.log(quiz)
-          return (
-            <Grid key={quiz.id} size={4}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h4">{quiz.title}</Typography>
-                  <Typography variant="body1">{quiz.description}</Typography>
-                </CardContent>
+        {_.map(query.data, quiz => (
+          <Grid key={quiz.id} size={4}>
+            <Card
+              sx={{
+                minHeight: '10em',
+                justifyContent: 'space-between',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <CardContent>
+                <Typography variant="h4">{quiz.title}</Typography>
+                <Typography variant="body1">{quiz.description}</Typography>
+              </CardContent>
+              {!_.isEmpty(quiz.questions) && (
                 <CardActions
                   sx={{
                     justifyContent: 'center',
                   }}
                 >
-                  <Link to={`/question/${quiz.questions[0].id}`}>
+                  <Link to={`/questions/${quiz.questions[0].id}`}>
                     <Button id={`quiz-start-${quiz.id}`}>Start Quiz</Button>
                   </Link>
                 </CardActions>
-              </Card>
-            </Grid>
-          )
-        })}
+              )}
+            </Card>
+          </Grid>
+        ))}
         {_.isEmpty(query.data) && (
           <Typography variant="h4">No tests available</Typography>
         )}

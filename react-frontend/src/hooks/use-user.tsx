@@ -8,10 +8,12 @@ const UserContext = createContext<{
   setUser: () => null,
 })
 
+const USER_KEY = 'quiz-user'
+
 export const UserProvider: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
-  const [user, setUser] = useState<string>('')
+  const [user, setUser] = useState<string>(localStorage.getItem(USER_KEY) || '')
 
   return (
     <UserContext.Provider
@@ -19,6 +21,7 @@ export const UserProvider: React.FC<{
         user: user,
         setUser: (name: string) => {
           setUser(name)
+          localStorage.setItem(USER_KEY, name)
           return null
         },
       }}
@@ -28,4 +31,5 @@ export const UserProvider: React.FC<{
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useUser = () => useContext(UserContext)
