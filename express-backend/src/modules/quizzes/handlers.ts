@@ -62,21 +62,25 @@ export const reducerFunction = (final: {}, r: RowResult) => {
 /**
  * Handle express GET "/api/quizzes" by querying module data, and formatting it.
  * Converts flat quiz objects into nested `{quizzes.$inferSelect & { questions: questions.$inferSelect[] }}[]` objects
- * @param {Request} _req - Express Request object
+ * @param {Request} req - Express Request object
  * @param {Response} res - Express Response object
  * @param {ReturnType<typeof drizzle>} db - drizzle db object
  *
  */
 export async function handleGetAll(
-  _req: Request,
+  req: Request,
   res: Response,
   db: ReturnType<typeof drizzle>
 ): Promise<void> {
-  const query = await getBaseQuery(db);
-  // reduce directly on [db.query] to keep types
-  const results = query.reduce(reducerFunction, {});
+  if (!req.headers["quiz-user"]) {
+    res.status(StatusCodes.OK).json([]);
+  } else {
+    const query = await getBaseQuery(db);
+    // reduce directly on [db.query] to keep types
+    const results = query.reduce(reducerFunction, {});
 
-  res.status(StatusCodes.OK).json(Object.values(results));
+    res.status(StatusCodes.OK).json(Object.values(results));
+  }
 }
 
 /**
@@ -91,13 +95,17 @@ export async function handleGet(
   res: Response,
   db: ReturnType<typeof drizzle>
 ): Promise<void> {
-  const query = await getBaseQuery(db).where(eq(quizzes.id, req.params.id));
-
-  // reduce directly on [db.query] to keep types
-  const results = query.reduce(reducerFunction, {});
-  const quiz = Object.values(results)[0];
-  if (_.isEmpty(quiz)) {
+  if (!req.headers["quiz-user"]) {
     res.status(StatusCodes.NOT_FOUND).json(null);
+  } else {
+    const query = await getBaseQuery(db).where(eq(quizzes.id, req.params.id));
+
+    // reduce directly on [db.query] to keep types
+    const results = query.reduce(reducerFunction, {});
+    const quiz = Object.values(results)[0];
+    if (_.isEmpty(quiz)) {
+      res.status(StatusCodes.NOT_FOUND).json(null);
+    }
+    res.status(StatusCodes.OK).json(quiz);
   }
-  res.status(StatusCodes.OK).json(quiz);
 }

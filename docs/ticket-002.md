@@ -13,6 +13,4 @@ as a student I want to start a quiz and have 3 retries before I have to continue
 
 ### BE
 
-- [ ] create questions api
-- [ ] create submissions api
-  - [ ] should return true / false depending if answer is correct or not
+- [x] create questions api
