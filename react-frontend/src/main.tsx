@@ -15,6 +15,7 @@ import theme from './theme.tsx'
 import Header from './components/Header.tsx'
 import QuizzesHomePage from './pages/QuizzesHome.tsx'
 import QuestionPage from './pages/Question.tsx'
+import ResultPage from './pages/Result.tsx'
 import { UserProvider } from './hooks/use-user.tsx'
 
 const queryClient = new QueryClient()
@@ -32,6 +33,7 @@ createRoot(document.getElementById('root')!).render(
                 <Route index element={<Navigate replace to="/home" />} />
                 <Route path="/home" element={<QuizzesHomePage />} />
                 <Route path="/questions/:id" element={<QuestionPage />} />
+                <Route path="/results/:id" element={<ResultPage />} />
               </Routes>
             </Container>
           </BrowserRouter>
