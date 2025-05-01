@@ -10,7 +10,7 @@ As a student I want visit the site, authenticate, and see a list of quizzes I ca
 - [x] add ui tests
 - [x] each quiz should have a card linking to the first question
 
-- [ ] create api endpoint for "/quizzes"
-- [ ] add quizzes / questions schemas
-- [ ] add handler for tests
-- [ ] add tests for [quizzes] module
+- [x] create api endpoint for "/quizzes"
+- [x] add quizzes / questions schemas
+- [x] add handler for tests
+- [x] add tests for [quizzes] module
