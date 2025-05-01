@@ -18,7 +18,7 @@ const getBaseQuery = (db: ReturnType<typeof drizzle>) =>
       id: quizzes.id,
       title: quizzes.title,
       description: quizzes.description,
-      questions: questions,
+      question: questions,
     })
     .from(quizzes)
     .leftJoin(questions, eq(quizzes.id, questions.quiz_id));
@@ -27,7 +27,7 @@ type RowResult = {
   id: string;
   title: string;
   description: string;
-  questions: {
+  question: {
     id: string;
     index: number | null;
     title: string;
@@ -43,16 +43,18 @@ type RowResult = {
  * @param {RowResult} r
  * @returns
  */
-const reducerFunction = (final: {}, r: RowResult) => {
+export const reducerFunction = (final: {}, r: RowResult) => {
   if (!_.has(final, r.id)) {
     _.set(final, r.id, {
       id: r.id,
+      title: r.title,
+      description: r.description,
       questions: [],
     });
   }
 
-  if (r.questions) {
-    _.set(final, `${r.id}.questions[${r.questions.index}]`, r.questions);
+  if (r.question) {
+    _.set(final, `${r.id}.questions[${r.question.index}]`, r.question);
   }
   return final;
 };
@@ -92,19 +94,7 @@ export async function handleGet(
   const query = await getBaseQuery(db).where(eq(quizzes.id, req.params.id));
 
   // reduce directly on [db.query] to keep types
-  const results = query.reduce((final, r) => {
-    if (!_.has(final, r.id)) {
-      _.set(final, r.id, {
-        id: r.id,
-        questions: [],
-      });
-    }
-
-    if (r.questions) {
-      _.set(final, `${r.id}.questions[${r.questions.index}]`, r.questions);
-    }
-    return final;
-  }, {});
+  const results = query.reduce(reducerFunction, {});
   const quiz = Object.values(results)[0];
   if (_.isEmpty(quiz)) {
     res.status(StatusCodes.NOT_FOUND).json(null);

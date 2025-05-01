@@ -2,7 +2,8 @@ import { describe, it, vi, expect } from "vitest";
 import { Request, Response } from "express";
 import { type drizzle } from "drizzle-orm/node-postgres";
 
-import { handleGetAll, handleGet } from "./handlers";
+import { handleGetAll, handleGet, reducerFunction } from "./handlers";
+
 describe("quizzes handlers", () => {
   describe("#handleGetAll", () => {
     it("should call response with 200 and json data", async () => {
@@ -56,6 +57,65 @@ describe("quizzes handlers", () => {
 
       expect(status).toBeCalledWith(404);
       expect(json).toBeCalledWith(null);
+    });
+  });
+
+  describe("#reducerFunction", () => {
+    it("should reduce rows into nested objects", () => {
+      const result = [
+        {
+          id: "qi-123",
+          title: "name",
+          description: "test",
+          question: {
+            index: 0,
+            id: "qe-12",
+            quiz_id: "123",
+            title: "name",
+            description: "test",
+            correct_answer: "tests",
+          },
+        },
+        {
+          id: "qi-123",
+          title: "name",
+          description: "test",
+          question: {
+            index: 1,
+            id: "qe-123",
+            quiz_id: "123",
+            title: "name",
+            correct_answer: "tests",
+            description: "test",
+          },
+        },
+      ].reduce(reducerFunction, {});
+
+      expect(result).toEqual({
+        "qi-123": {
+          id: "qi-123",
+          title: "name",
+          description: "test",
+          questions: [
+            {
+              index: 0,
+              id: "qe-12",
+              quiz_id: "123",
+              title: "name",
+              description: "test",
+              correct_answer: "tests",
+            },
+            {
+              index: 1,
+              id: "qe-123",
+              quiz_id: "123",
+              title: "name",
+              correct_answer: "tests",
+              description: "test",
+            },
+          ],
+        },
+      });
     });
   });
 });
