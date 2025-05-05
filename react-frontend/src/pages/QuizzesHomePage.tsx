@@ -52,8 +52,6 @@ export default function QuizzesHome() {
     },
   })
 
-  console.log({ user, query, form })
-
   if (!user) {
     return (
       <Dialog open>

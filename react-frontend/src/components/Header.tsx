@@ -2,6 +2,10 @@ import { AppBar, Button, Toolbar, Typography } from '@mui/material'
 import { useUser } from '../hooks/use-user'
 import { useNavigate } from 'react-router'
 
+/**
+ * App header, includes logout button
+ * @returns {React.ReactNode}
+ */
 export default function Header() {
   const { user, setUser } = useUser()
   const nav = useNavigate()
@@ -9,16 +13,15 @@ export default function Header() {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Button
-          variant="text"
-          sx={{ color: 'white' }}
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{ flexGrow: 0, cursor: 'pointer' }}
           onClick={() => nav('/home')}
         >
-          Home
-        </Button>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           TouchBistro Tests
         </Typography>
+        <div style={{ flexGrow: 1 }} />
         <Typography>{user}</Typography>
         <Button
           variant="outlined"

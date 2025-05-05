@@ -10,6 +10,9 @@ const UserContext = createContext<{
 
 const USER_KEY = 'quiz-user'
 
+/**
+ * User Context provider
+ */
 export const UserProvider: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
@@ -31,5 +34,9 @@ export const UserProvider: React.FC<{
   )
 }
 
+/**
+ * Hook for accessing / setting user. Syncs the value to localstorage
+ * @returns {{user: string, setUser: (name: string) => void}}
+ */
 // eslint-disable-next-line react-refresh/only-export-components
 export const useUser = () => useContext(UserContext)

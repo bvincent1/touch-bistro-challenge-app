@@ -12,6 +12,9 @@ import { useUser } from '../hooks/use-user'
 import { useQuery } from '@tanstack/react-query'
 import _ from 'lodash'
 
+/**
+ * Results page
+ */
 export default function ResultPage() {
   const { id } = useParams()
   const { user } = useUser()
@@ -28,8 +31,6 @@ export default function ResultPage() {
         })
       ).json(),
   })
-
-  console.log({ user, id, query })
 
   if (query.isLoading) {
     return (

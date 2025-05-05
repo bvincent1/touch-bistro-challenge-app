@@ -16,7 +16,10 @@ import { z } from 'zod'
 import _ from 'lodash'
 import { useUser } from '../hooks/use-user'
 
-export default function Question() {
+/**
+ * Question page
+ */
+export default function QuestionPage() {
   const { id } = useParams()
   const { user } = useUser()
   const query = useQuery({
@@ -113,8 +116,6 @@ export default function Question() {
       </Grid>
     )
   }
-
-  console.log({ query, form, mutation })
 
   return (
     <Grid container justifyContent="center">
