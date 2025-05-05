@@ -74,26 +74,20 @@ export async function handleGet(
 ): Promise<void> {
   if (!req.headers["quiz-user"]) {
     res.status(StatusCodes.NOT_FOUND).json(null);
-  } else {
-    try {
-      const results = await db
-        .select({ count: sql<number>`cast(count(${questions.id}) as int)` })
-        .from(questions)
-        .leftJoin(submissions, and(eq(submissions.question_id, questions.id)))
-        .where(
-          and(
-            eq(questions.quiz_id, req.params.id),
-            eq(questions.correct_answer, submissions.answer)
-          )
-        );
-
-      res.status(StatusCodes.OK).json({
-        correct_answers: results.length === 0 ? 0 : results[0].count,
-      });
-    } catch (error) {
-      console.error(error);
-      // can't return actual server state
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(null);
-    }
+    return;
   }
+  const results = await db
+    .select({ count: sql<number>`cast(count(${questions.id}) as int)` })
+    .from(questions)
+    .leftJoin(submissions, and(eq(submissions.question_id, questions.id)))
+    .where(
+      and(
+        eq(questions.quiz_id, req.params.id),
+        eq(questions.correct_answer, submissions.answer)
+      )
+    );
+
+  res.status(StatusCodes.OK).json({
+    correct_answers: results.length === 0 ? 0 : results[0].count,
+  });
 }
