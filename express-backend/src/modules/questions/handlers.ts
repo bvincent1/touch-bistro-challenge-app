@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { type drizzle } from "drizzle-orm/node-postgres";
 import { StatusCodes } from "http-status-codes";
-import { eq, and, aliasedTable, sql, lt } from "drizzle-orm";
+import { eq, and, aliasedTable, sql, lt, or, isNull } from "drizzle-orm";
 import _ from "lodash";
 
 import { questions } from "./models";
@@ -42,7 +42,7 @@ const getBaseQuery = (db: ReturnType<typeof drizzle>) => {
       )
     )
     .leftJoin(subs, eq(subs.question_id, questions.id))
-    .where(lt(subs.count, 3))
+    .where(or(lt(subs.count, 3), isNull(subs.count)))
     .as("main");
 
   return db

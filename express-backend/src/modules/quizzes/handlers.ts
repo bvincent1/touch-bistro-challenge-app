@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { type drizzle } from "drizzle-orm/node-postgres";
 import { StatusCodes } from "http-status-codes";
-import { eq, sql, lt, getTableColumns } from "drizzle-orm";
+import { eq, sql, lt, getTableColumns, or, isNull } from "drizzle-orm";
 import _ from "lodash";
 
 import { quizzes } from "./models";
@@ -31,7 +31,7 @@ const getBaseQuery = (db: ReturnType<typeof drizzle>) => {
     })
     .from(questions)
     .leftJoin(subs, eq(subs.question_id, questions.id))
-    .where(lt(subs.count, 3))
+    .where(or(lt(subs.count, 3), isNull(subs.count)))
     .as("nested_questions");
 
   return db
@@ -91,6 +91,7 @@ export async function handleGetAll(
     res.status(StatusCodes.OK).json([]);
   } else {
     const query = await getBaseQuery(db);
+    console.log(JSON.stringify(query, null, 2));
     // reduce directly on [db.query] to keep types
     const results = query.reduce(reducerFunction, {});
 
