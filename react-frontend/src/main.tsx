@@ -13,7 +13,7 @@ import './index.css'
 
 import theme from './theme.tsx'
 import Header from './components/Header.tsx'
-import QuizzesHomePage from './pages/QuizzesHome.tsx'
+import QuizzesHomePage from './pages/QuizzesHomePage.tsx'
 import QuestionPage from './pages/QuestionPage.tsx'
 import ResultPage from './pages/ResultPage.tsx'
 import { UserProvider } from './hooks/use-user.tsx'
