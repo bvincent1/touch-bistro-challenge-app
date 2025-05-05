@@ -1,6 +1,7 @@
 import { describe, it, vi, expect } from "vitest";
 import { Request, Response } from "express";
 import { type drizzle } from "drizzle-orm/node-postgres";
+import { drizzle as drizzleProxy } from "drizzle-orm/pg-proxy";
 
 import { handlePost } from "./handlers";
 
@@ -22,9 +23,9 @@ describe("submissions handlers", () => {
       await handlePost(
         { body: { question_id: "test", answer: "tt" } } as Request,
         { status } as unknown as Response,
-        {
-          select,
-        } as unknown as ReturnType<typeof drizzle>
+        drizzleProxy(async () => ({ rows: [] })) as unknown as ReturnType<
+          typeof drizzle
+        >
       );
 
       expect(status).toBeCalledWith(200);

@@ -91,7 +91,6 @@ export async function handleGetAll(
     res.status(StatusCodes.OK).json([]);
   } else {
     const query = await getBaseQuery(db);
-    console.log(query);
     // reduce directly on [db.query] to keep types
     const results = query.reduce(reducerFunction, {});
 

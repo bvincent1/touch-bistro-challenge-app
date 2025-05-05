@@ -2,11 +2,11 @@ import e, { Request, Response } from "express";
 import { type drizzle } from "drizzle-orm/node-postgres";
 import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
+import _ from "lodash";
 
 import { submissions } from "./models";
 import { questions } from "../questions/models";
 import { eq, and, sql } from "drizzle-orm";
-import _ from "lodash";
 
 /**
  * Create submission object, always responds (200, boolean)
