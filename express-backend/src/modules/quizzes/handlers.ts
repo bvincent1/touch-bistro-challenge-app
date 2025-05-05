@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
 import { type drizzle } from "drizzle-orm/node-postgres";
 import { StatusCodes } from "http-status-codes";
+import { eq, sql, lt } from "drizzle-orm";
+import _ from "lodash";
+
 import { quizzes } from "./models";
 import { questions } from "../questions/models";
-import { eq, sql } from "drizzle-orm";
-import _ from "lodash";
+import { submissions } from "../submissions/models";
+import { ArrayElement } from "../../libs/types";
 
 /**
  * Get basic query for quizzes / questions, not await / async incase we want
@@ -12,8 +15,17 @@ import _ from "lodash";
  * @param {ReturnType<typeof drizzle>} db - drizzle db connection
  * @returns {Promise}
  */
-const getBaseQuery = (db: ReturnType<typeof drizzle>) =>
-  db
+const getBaseQuery = (db: ReturnType<typeof drizzle>) => {
+  const subs = db
+    .select({
+      question_id: submissions.question_id,
+      count: sql<number>`cast(count(${submissions.id}) as int)`.as("count"),
+    })
+    .from(submissions)
+    .groupBy(submissions.question_id)
+    .as("subs");
+
+  return db
     .select({
       id: quizzes.id,
       title: quizzes.title,
@@ -21,22 +33,13 @@ const getBaseQuery = (db: ReturnType<typeof drizzle>) =>
       question: questions,
     })
     .from(quizzes)
-    .leftJoin(questions, eq(quizzes.id, questions.quiz_id));
-
-type RowResult = {
-  id: string;
-  title: string;
-  description: string;
-  question: {
-    id: string;
-    index: number | null;
-    title: string;
-    description: string;
-    correct_answer: string;
-    quiz_id: string;
-  } | null;
+    .leftJoin(questions, eq(quizzes.id, questions.quiz_id))
+    .leftJoin(subs, eq(subs.question_id, questions.id))
+    .where(lt(subs.count, 3))
+    .$dynamic();
 };
 
+type RowResult = ArrayElement<Awaited<ReturnType<typeof getBaseQuery>>>;
 /**
  * Reduce query results into a single nested object
  * @param {{}} final
@@ -54,7 +57,14 @@ export const reducerFunction = (final: {}, r: RowResult) => {
   }
 
   if (r.question) {
-    _.set(final, `${r.id}.questions[${r.question.index}]`, r.question);
+    _.set(
+      final,
+      `${r.id}.questions`,
+      _.sortBy(
+        _.concat(_.get(final, `${r.id}.questions`, []), r.question),
+        "index"
+      )
+    );
   }
   return final;
 };
