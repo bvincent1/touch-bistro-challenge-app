@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { type drizzle } from "drizzle-orm/node-postgres";
 import { StatusCodes } from "http-status-codes";
-import { eq, sql, lt } from "drizzle-orm";
+import { eq, sql, lt, getTableColumns } from "drizzle-orm";
 import _ from "lodash";
 
 import { quizzes } from "./models";
@@ -25,17 +25,19 @@ const getBaseQuery = (db: ReturnType<typeof drizzle>) => {
     .groupBy(submissions.question_id)
     .as("subs");
 
-  return db
+  const nested_questions = db
     .select({
-      id: quizzes.id,
-      title: quizzes.title,
-      description: quizzes.description,
-      question: questions,
+      ...getTableColumns(questions),
     })
-    .from(quizzes)
-    .leftJoin(questions, eq(quizzes.id, questions.quiz_id))
+    .from(questions)
     .leftJoin(subs, eq(subs.question_id, questions.id))
     .where(lt(subs.count, 3))
+    .as("nested_questions");
+
+  return db
+    .select()
+    .from(quizzes)
+    .leftJoin(nested_questions, eq(nested_questions.quiz_id, quizzes.id))
     .$dynamic();
 };
 
@@ -47,21 +49,24 @@ type RowResult = ArrayElement<Awaited<ReturnType<typeof getBaseQuery>>>;
  * @returns
  */
 export const reducerFunction = (final: {}, r: RowResult) => {
-  if (!_.has(final, r.id)) {
-    _.set(final, r.id, {
-      id: r.id,
-      title: r.title,
-      description: r.description,
+  if (!_.has(final, r.quizzes.id)) {
+    _.set(final, r.quizzes.id, {
+      id: r.quizzes.id,
+      title: r.quizzes.title,
+      description: r.quizzes.description,
       questions: [],
     });
   }
 
-  if (r.question) {
+  if (r.nested_questions) {
     _.set(
       final,
-      `${r.id}.questions`,
+      `${r.quizzes.id}.questions`,
       _.sortBy(
-        _.concat(_.get(final, `${r.id}.questions`, []), r.question),
+        _.concat(
+          _.get(final, `${r.quizzes.id}.questions`, []),
+          r.nested_questions
+        ),
         "index"
       )
     );
@@ -86,6 +91,7 @@ export async function handleGetAll(
     res.status(StatusCodes.OK).json([]);
   } else {
     const query = await getBaseQuery(db);
+    console.log(query);
     // reduce directly on [db.query] to keep types
     const results = query.reduce(reducerFunction, {});
 

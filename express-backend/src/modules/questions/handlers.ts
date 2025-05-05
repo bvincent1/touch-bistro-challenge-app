@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import { type drizzle } from "drizzle-orm/node-postgres";
 import { StatusCodes } from "http-status-codes";
-import { questions } from "./models";
-import { eq, and, aliasedTable, sql } from "drizzle-orm";
+import { eq, and, aliasedTable, sql, lt } from "drizzle-orm";
 import _ from "lodash";
+
+import { questions } from "./models";
+import { submissions } from "../submissions/models";
 
 /**
  * Get basic query for quizzes / questions, not await / async incase we want
@@ -13,14 +15,23 @@ import _ from "lodash";
  */
 const getBaseQuery = (db: ReturnType<typeof drizzle>) => {
   const nextQuestionQuery = aliasedTable(questions, "next");
-  return db
+  const subs = db
+    .select({
+      question_id: submissions.question_id,
+      count: sql<number>`cast(count(${submissions.id}) as int)`.as("count"),
+    })
+    .from(submissions)
+    .groupBy(submissions.question_id)
+    .as("subs");
+
+  const main = db
     .select({
       id: questions.id,
       title: questions.title,
       description: questions.description,
       index: questions.index,
       quiz_id: questions.quiz_id,
-      next: nextQuestionQuery.id,
+      next: sql`${nextQuestionQuery.id} as next`,
     })
     .from(questions)
     .leftJoin(
@@ -29,7 +40,21 @@ const getBaseQuery = (db: ReturnType<typeof drizzle>) => {
         eq(questions.quiz_id, nextQuestionQuery.quiz_id),
         eq(questions.index, sql`next.index - 1`)
       )
-    );
+    )
+    .leftJoin(subs, eq(subs.question_id, questions.id))
+    .where(lt(subs.count, 3))
+    .as("main");
+
+  return db
+    .select({
+      id: main.id,
+      title: main.title,
+      description: main.description,
+      index: main.index,
+      quiz_id: main.quiz_id,
+      next: sql<string>`"next"`,
+    })
+    .from(main);
 };
 
 /**
@@ -65,7 +90,7 @@ export async function handleGet(
   if (!req.headers["quiz-user"]) {
     res.status(StatusCodes.NOT_FOUND).json(null);
   } else {
-    const query = await getBaseQuery(db).where(eq(questions.id, req.params.id));
+    const query = await getBaseQuery(db).where(eq(sql`id`, req.params.id));
     if (_.isEmpty(query)) {
       res.status(StatusCodes.NOT_FOUND).json(null);
     }

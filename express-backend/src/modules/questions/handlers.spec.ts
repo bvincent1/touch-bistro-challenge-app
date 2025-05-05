@@ -1,10 +1,11 @@
 import { describe, it, vi, expect } from "vitest";
 import { Request, Response } from "express";
 import { type drizzle } from "drizzle-orm/node-postgres";
+import { drizzle as drizzleProxy } from "drizzle-orm/pg-proxy";
 
 import { handleGetAll, handleGet } from "./handlers";
 
-import db from "../../db/index";
+// import db from "../../db/index";
 
 describe("questions handlers", () => {
   describe("#handleGetAll", () => {
@@ -13,22 +14,16 @@ describe("questions handlers", () => {
       const status = vi.fn(() => ({
         json,
       }));
-
-      // const leftJoin = vi.fn(() => Promise.resolve([]));
-      // const from = vi.fn(() => ({
-      //   leftJoin,
-      // }));
-      // const select = vi.fn(() => ({
-      //   from,
-      // }));
       await handleGetAll(
         { headers: { "quiz-user": "test" } } as unknown as Request,
         { status } as unknown as Response,
-        db
+        drizzleProxy(async () => ({ rows: [] })) as unknown as ReturnType<
+          typeof drizzle
+        >
       );
 
-      // expect(status).toBeCalledWith(200);
-      // expect(json).toBeCalledWith([]);
+      expect(status).toBeCalledWith(200);
+      expect(json).toBeCalledWith([]);
     });
   });
 
@@ -39,23 +34,15 @@ describe("questions handlers", () => {
         json,
       }));
 
-      const where = vi.fn(() => Promise.resolve([]));
-      const leftJoin = vi.fn(() => ({ where }));
-      const from = vi.fn(() => ({
-        leftJoin,
-      }));
-      const select = vi.fn(() => ({
-        from,
-      }));
       await handleGet(
         {
           params: { id: "test" },
           headers: { "quiz-user": "test" },
         } as unknown as Request<{ id: string }>,
         { status } as unknown as Response,
-        {
-          select,
-        } as unknown as ReturnType<typeof drizzle>
+        drizzleProxy(async () => ({ rows: [] })) as unknown as ReturnType<
+          typeof drizzle
+        >
       );
 
       expect(status).toBeCalledWith(404);

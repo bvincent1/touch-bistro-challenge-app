@@ -10,6 +10,7 @@ const db = drizzle({
     host: process.env.POSTGRES_HOST,
     ssl: !!process.env.POSTGRES_SSL,
   },
+  logger: true,
 });
 
 export default db;

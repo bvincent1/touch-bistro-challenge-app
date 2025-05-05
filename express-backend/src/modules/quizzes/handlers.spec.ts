@@ -1,6 +1,7 @@
 import { describe, it, vi, expect } from "vitest";
 import { Request, Response } from "express";
 import { type drizzle } from "drizzle-orm/node-postgres";
+import { drizzle as drizzleProxy } from "drizzle-orm/pg-proxy";
 
 import { handleGetAll, handleGet, reducerFunction } from "./handlers";
 
@@ -11,20 +12,12 @@ describe("quizzes handlers", () => {
       const status = vi.fn(() => ({
         json,
       }));
-
-      const leftJoin = vi.fn(() => Promise.resolve([]));
-      const from = vi.fn(() => ({
-        leftJoin,
-      }));
-      const select = vi.fn(() => ({
-        from,
-      }));
       await handleGetAll(
         { headers: { "quiz-user": "test" } } as unknown as Request,
         { status } as unknown as Response,
-        {
-          select,
-        } as unknown as ReturnType<typeof drizzle>
+        drizzleProxy(async () => ({ rows: [] })) as unknown as ReturnType<
+          typeof drizzle
+        >
       );
 
       expect(status).toBeCalledWith(200);
@@ -39,23 +32,15 @@ describe("quizzes handlers", () => {
         json,
       }));
 
-      const where = vi.fn(() => Promise.resolve([]));
-      const leftJoin = vi.fn(() => ({ where }));
-      const from = vi.fn(() => ({
-        leftJoin,
-      }));
-      const select = vi.fn(() => ({
-        from,
-      }));
       await handleGet(
         {
           params: { id: "test" },
           headers: { "quiz-user": "test" },
         } as unknown as Request<{ id: string }>,
         { status } as unknown as Response,
-        {
-          select,
-        } as unknown as ReturnType<typeof drizzle>
+        drizzleProxy(async () => ({ rows: [] })) as unknown as ReturnType<
+          typeof drizzle
+        >
       );
 
       expect(status).toBeCalledWith(404);
@@ -67,10 +52,12 @@ describe("quizzes handlers", () => {
     it("should reduce rows into nested objects", () => {
       const result = [
         {
-          id: "qi-123",
-          title: "name",
-          description: "test",
-          question: {
+          quizzes: {
+            id: "qi-123",
+            title: "name",
+            description: "test",
+          },
+          nested_questions: {
             index: 0,
             id: "qe-12",
             quiz_id: "123",
@@ -80,10 +67,12 @@ describe("quizzes handlers", () => {
           },
         },
         {
-          id: "qi-123",
-          title: "name",
-          description: "test",
-          question: {
+          quizzes: {
+            id: "qi-123",
+            title: "name",
+            description: "test",
+          },
+          nested_questions: {
             index: 1,
             id: "qe-123",
             quiz_id: "123",
