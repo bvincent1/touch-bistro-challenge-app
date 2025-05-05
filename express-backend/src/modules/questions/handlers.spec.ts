@@ -21,7 +21,11 @@ describe("questions handlers", () => {
       // const select = vi.fn(() => ({
       //   from,
       // }));
-      await handleGetAll({} as Request, { status } as unknown as Response, db);
+      await handleGetAll(
+        { headers: { "quiz-user": "test" } } as unknown as Request,
+        { status } as unknown as Response,
+        db
+      );
 
       // expect(status).toBeCalledWith(200);
       // expect(json).toBeCalledWith([]);
@@ -44,7 +48,10 @@ describe("questions handlers", () => {
         from,
       }));
       await handleGet(
-        { params: { id: "test" } } as unknown as Request<{ id: string }>,
+        {
+          params: { id: "test" },
+          headers: { "quiz-user": "test" },
+        } as unknown as Request<{ id: string }>,
         { status } as unknown as Response,
         {
           select,

@@ -20,7 +20,7 @@ describe("quizzes handlers", () => {
         from,
       }));
       await handleGetAll(
-        {} as Request,
+        { headers: { "quiz-user": "test" } } as unknown as Request,
         { status } as unknown as Response,
         {
           select,
@@ -48,7 +48,10 @@ describe("quizzes handlers", () => {
         from,
       }));
       await handleGet(
-        { params: { id: "test" } } as unknown as Request<{ id: string }>,
+        {
+          params: { id: "test" },
+          headers: { "quiz-user": "test" },
+        } as unknown as Request<{ id: string }>,
         { status } as unknown as Response,
         {
           select,
