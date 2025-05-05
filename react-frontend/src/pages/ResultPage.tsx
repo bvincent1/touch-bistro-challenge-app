@@ -77,14 +77,7 @@ export default function ResultPage() {
             }}
           >
             <Typography variant="h4">Results</Typography>
-            <table>
-              <thead>Correct answers</thead>
-              <tbody>
-                <tr>
-                  <td>{query.data.correct_answers}</td>
-                </tr>
-              </tbody>
-            </table>
+            <Typography variant="h6">{`Correct answers: ${query.data.correct_answers}`}</Typography>
           </CardContent>
           <CardActions
             sx={{

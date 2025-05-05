@@ -11,7 +11,7 @@
     "id": "20d81b6f-73ce-4dff-baa0-8f5a5a959391",
     "index": 1,
     "title": "Find the line of best fit",
-    "description": "Given the following coordinates find the line of best fit:\n|x|y|\n| --- |\n|1|3|\n|2|6|\n|3|9|\n|4|15|\n|6|28|\nCalculate to 3 significant digits. and make sure to format your answer as \"y=Mx+b\" with *no spaces*",
+    "description": "Given the following coordinates find the line of best fit:\n|x|y|\n|-|-|\n|1|3|\n|2|6|\n|3|9|\n|4|15|\n|6|28|\n\nCalculate to 3 significant digits. and make sure to format your answer as \"y=Mx+b\" with *no spaces*",
     "correct_answer": "y=5.054x-3.973",
     "quiz_id": "253ddd40-09c8-48b0-8a06-1abb0d02a3ee"
   }
