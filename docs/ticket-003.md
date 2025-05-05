@@ -11,6 +11,6 @@ as a student I want to see whether my question submission is correct, and see my
 ### BE
 
 - [x] create submissions api
-  - [ ] return T/F based on question correctness
+  - [x] return T/F based on question correctness
 - [ ] add tests
 - [ ] update queries to lock quizzes & questions based on submissions

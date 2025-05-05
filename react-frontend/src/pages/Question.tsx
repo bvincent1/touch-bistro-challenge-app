@@ -58,7 +58,18 @@ export default function Question() {
       }),
     },
     onSubmit: ({ value, formApi }) => {
-      mutation.mutate(value)
+      mutation.mutate(value, {
+        onSuccess(data) {
+          if (_.isBoolean(data) && data) {
+            formApi.reset()
+            if (query.data.next) {
+              nav(`/questions/${query.data.next}`)
+            } else {
+              nav(`/results/${query.data.quiz_id}`)
+            }
+          }
+        },
+      })
       if (formApi.state.submissionAttempts >= 3) {
         formApi.reset()
         if (query.data.next) {
