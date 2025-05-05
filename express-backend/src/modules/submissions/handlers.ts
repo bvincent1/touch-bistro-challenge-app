@@ -67,6 +67,12 @@ export async function handlePost(
     .json(question.correct_answer === _.get(req, "body.answer", NaN));
 }
 
+/**
+ * Get submission results for a given [quiz_id]
+ * @param {Request} req
+ * @param {Response} res
+ * @param {ReturnType<typeof drizzle>} db
+ */
 export async function handleGet(
   req: Request,
   res: Response,
