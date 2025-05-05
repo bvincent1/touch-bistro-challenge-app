@@ -1,8 +1,8 @@
 import { Router } from "express";
+import { StatusCodes } from "http-status-codes";
 
 import db from "../../db";
 import { handlePost, handleGet } from "./handlers";
-import { StatusCodes } from "http-status-codes";
 
 const submissionRouter = Router();
 

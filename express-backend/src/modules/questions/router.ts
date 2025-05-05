@@ -1,8 +1,8 @@
 import { Router } from "express";
+import { StatusCodes } from "http-status-codes";
 
 import { handleGet, handleGetAll } from "./handlers";
 import db from "../../db";
-import { StatusCodes } from "http-status-codes";
 
 const questionRouter = Router();
 
