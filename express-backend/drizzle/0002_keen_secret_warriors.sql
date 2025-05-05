@@ -1,0 +1,1 @@
+ALTER TABLE "submissions" ALTER COLUMN "user" SET DATA TYPE varchar;

@@ -8,6 +8,20 @@
       "when": 1746044439063,
       "tag": "0000_absurd_lionheart",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1746455183017,
+      "tag": "0001_easy_zarda",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1746455600320,
+      "tag": "0002_keen_secret_warriors",
+      "breakpoints": true
     }
   ]
 }
