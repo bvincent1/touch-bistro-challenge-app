@@ -8,12 +8,22 @@ const quizRouter = Router();
 
 // GET /api/quizzes - Retrieve all test objects
 quizRouter.get("/", async (req, res) => {
-  await handleGetAll(req, res, db);
+  try {
+    await handleGetAll(req, res, db);
+  } catch (error) {
+    console.error(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(null);
+  }
 });
 
 // GET /api/quizzes/:id - Retrieve a single test object by ID
 quizRouter.get("/:id", async (req, res) => {
-  await handleGet(req, res, db);
+  try {
+    await handleGet(req, res, db);
+  } catch (error) {
+    console.error(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(null);
+  }
 });
 
 export default quizRouter;
