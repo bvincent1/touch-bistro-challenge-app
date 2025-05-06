@@ -25,10 +25,13 @@ EG: `feat(#002): add cheats module` vs `chore: implement formatting`
 > frontend
 
 development: `make dev`
+
 tests: `make cypress` -> then click the e2e tests, and then run each spec accordingly (these are UI tests only, so you don't need the backend running)
 
 > backend
 
 1st time: `make services`, `make seed` (in other terminal)
+
 development: `make services`, `make dev` (in other terminal)
+
 tests: `make tests` (don't need the db running)
